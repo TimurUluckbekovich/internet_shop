@@ -1,4 +1,5 @@
 from database import connect_db
+from datetime import datetime
 
 def create_category(title):
     connection = connect_db()
@@ -157,6 +158,97 @@ def delete_product(product_id):
 
     except Exception as e:
         print(f"Ошибка: {e}")
+
+    finally:
+        connection.close()
+
+
+
+def create_order(user_id):
+    connection = connect_db()
+
+    try:
+        cursor = connection.cursor()
+
+        created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        cursor.execute("""
+            INSERT INTO orders (user_id, created_at)
+            VALUES (?, ?)
+        """, (user_id, created_at))
+
+        order_id = cursor.lastrowid
+
+        connection.commit()
+        return order_id
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        return None
+
+    finally:
+        connection.close()
+
+
+def add_order_item(order_id, product_id, quantity):
+    connection = connect_db()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            INSERT INTO order_items (order_id, product_id, quantity)
+            VALUES (?, ?, ?)
+        """, (order_id, product_id, quantity))
+
+        connection.commit()
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+
+    finally:
+        connection.close()
+
+
+def get_user_orders(user_id):
+    connection = connect_db()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            SELECT * FROM orders
+            WHERE user_id = ?
+        """, (user_id,))
+
+        return cursor.fetchall()
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        return []
+
+    finally:
+        connection.close()
+
+
+def get_order_items(order_id):
+    connection = connect_db()
+
+    try:
+        cursor = connection.cursor()
+
+        cursor.execute("""
+            SELECT products.title, products.price, order_items.quantity
+            FROM order_items
+            JOIN products ON order_items.product_id = products.id
+            WHERE order_items.order_id = ?
+        """, (order_id,))
+
+        return cursor.fetchall()
+
+    except Exception as e:
+        print(f"Ошибка: {e}")
+        return []
 
     finally:
         connection.close()

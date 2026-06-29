@@ -1,4 +1,5 @@
 import random
+from crud import *
 
 class User:
     def __init__(self, id, name, role):
@@ -18,33 +19,50 @@ class Customer(User):
         print(f"Покупатель: {self.name}")
 
     def show_products(self):
-        pass
+        return get_products()
 
-    def search_products(self):
-        pass
+    def search_products(self, title):
+        products = get_products()
 
-    def create_order(self):
-        pass
+        result = []
+
+        for product in products:
+            if title.lower() in product[1].lower():
+                result.append(product)
+
+        return result
+
+    def create_order(self, product_id, quantity):
+        order_id = create_order(self.get_id())
+        add_order_item(order_id, product_id, quantity)
 
     def show_orders(self):
-        pass
+        orders = get_user_orders(self.get_id())
+
+        for order in orders:
+            print(order)
+
+            items = get_order_items(order[0])
+
+            for item in items:
+                print(item)
 
 
 class Admin(User):
     def show_info(self):
         print(f"Администратор: {self.name}")
 
-    def create_product(self):
-        pass
+    def create_product(self, title, price, category_id):
+        create_product(title, price, category_id)
 
-    def update_product(self):
-        pass
+    def update_product(self, product_id, title, price, category_id):
+        update_product(product_id, title, price, category_id)
 
-    def delete_product(self):
-        pass
+    def delete_product(self, product_id):
+        delete_product(product_id)
 
     def show_statistics(self):
-        pass
+        print("Статистика пока не реализована.")
 
 from abc import ABC, abstractmethod
 
