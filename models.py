@@ -38,14 +38,22 @@ class Customer(User):
 
     def show_orders(self):
         orders = get_user_orders(self.get_id())
-
         for order in orders:
-            print(order)
+            order_id = order[0]
+            created_at = order[2]
 
-            items = get_order_items(order[0])
+            print(f"\nЗаказ №{order_id}")
+            print(f"Дата: {created_at}")
+            print("Товары:")
+
+            items = get_order_items(order_id)
 
             for item in items:
-                print(item)
+                title = item[0]
+                price = item[1]
+                qty = item[2]
+
+                print(f"- {title} | {price} сом | x{qty}")
 
 
 class Admin(User):

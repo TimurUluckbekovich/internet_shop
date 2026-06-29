@@ -54,11 +54,11 @@ while True:
 
             for product in products:
                 print(f"""
-                            ID: {product[0]}
-                            Название: {product[1]}
-                            Цена: {product[2]} сом
-                            Категория: {product[3]}
-                            ----------------------------
+ID: {product[0]}
+Название: {product[1]}
+Цена: {product[2]} сом
+Категория: {product[3]}
+----------------------------
                         """)
 
         elif choice == "2":
@@ -75,11 +75,11 @@ while True:
             else:
                 for product in products:
                     print(f"""
-                                ID: {product[0]}
-                                Название: {product[1]}
-                                Цена: {product[2]} сом
-                                Категория: {product[3]}
-                                ----------------------------
+ID: {product[0]}
+Название: {product[1]}
+Цена: {product[2]} сом
+Категория: {product[3]}
+----------------------------
                             """)
 
         elif choice == "3":
