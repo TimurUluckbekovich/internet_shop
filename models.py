@@ -81,7 +81,7 @@ class Admin(User):
             print(f"ID: {category[0]} | {category[1]}")
 
     def update_category(self, category_id, title):
-        update_category(category_id, title)
+        update_category(category_id, title )
 
     def delete_category(self, category_id):
         delete_category(category_id)
