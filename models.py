@@ -61,8 +61,44 @@ class Admin(User):
     def delete_product(self, product_id):
         delete_product(product_id)
 
+    def create_category(self, title):
+        create_category(title)
+
+    def show_categories(self):
+        categories = get_categories()
+
+        print("\n===== КАТЕГОРИИ =====")
+
+        for category in categories:
+            print(f"ID: {category[0]} | {category[1]}")
+
+    def update_category(self, category_id, title):
+        update_category(category_id, title)
+
+    def delete_category(self, category_id):
+        delete_category(category_id)
+
+    # ---------- СТАТИСТИКА ----------
+
     def show_statistics(self):
-        print("Статистика пока не реализована.")
+
+        print("\n========== СТАТИСТИКА ==========")
+
+        print(f"Количество товаров: {count_products()[0]}")
+        print(f"Средняя цена: {average_price()[0]}")
+        print(f"Максимальная цена: {max_price()[0]}")
+        print(f"Минимальная цена: {min_price()[0]}")
+        print(f"Общая сумма продаж: {total_sales()[0]}")
+
+        print("\nПродажи по категориям:")
+
+        for row in products_by_category():
+            print(f"{row[0]} - {row[1]}")
+
+        print("\nТовары дороже средней цены:")
+
+        for row in products_above_average():
+            print(f"{row[1]} - {row[2]} сом")
 
 from abc import ABC, abstractmethod
 
@@ -77,8 +113,11 @@ class Product(ABC):
     def show_info(self):
         pass
 
+class DiscountMixin:
+    def get_discount_price(self):
+        return self.price * 0.9
 
-class ShopProduct(Product):
+class ShopProduct(Product, DiscountMixin):
     def __init__(self, id, title, price, category_id):
         super().__init__(id, title, price, category_id)
 

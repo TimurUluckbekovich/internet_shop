@@ -56,5 +56,20 @@ def create_tables():
         )
     """)
 
+    cursor.execute("""
+    CREATE VIEW IF NOT EXISTS product_statistics AS
+    SELECT
+    products.title,
+    categories.title AS category,
+    products.price,
+    COALESCE(SUM(order_items.quantity),0) AS sales
+    FROM products
+    LEFT JOIN categories
+    ON products.category_id=categories.id
+    LEFT JOIN order_items
+    ON products.id=order_items.product_id
+    GROUP BY products.id
+    """)
+
     conn.commit()
     conn.close()
