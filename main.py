@@ -1,5 +1,17 @@
 from database import create_tables
+from crud import *
 
 create_tables()
 
-print("База данных успешно создана!")
+create_category("Ноутбуки")
+create_category("Телефоны")
+
+print(get_categories())
+
+update_category(2, "Смартфоны")
+
+print(get_categories())
+
+delete_category(1)
+
+print(get_categories())
