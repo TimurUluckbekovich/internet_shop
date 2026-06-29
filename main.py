@@ -5,21 +5,30 @@ from crud import create_user, get_user
 create_tables()
 
 print("========== ИНТЕРНЕТ-МАГАЗИН ==========")
-print("Для проверки администратора используйте имя: Admin")
-print()
+print("Для проверки администратора используйте имя: Admin\n")
 
-print("1. Вход")
-print("2. Регистрация")
+try:
+    print("1. Вход")
+    print("2. Регистрация")
 
-choice = input("Выберите действие: ")
+    choice = input("Выберите действие: ")
+
+    if choice not in ("1", "2"):
+        print("Ошибка: нужно выбрать 1 или 2")
+        exit()
+
+except Exception:
+    print("Ошибка ввода")
+    exit()
+
 
 if choice == "2":
     name = input("Введите имя: ")
     create_user(name, "customer")
     print("Регистрация успешно завершена!\n")
 
-name = input("Введите имя: ")
 
+name = input("Введите имя: ")
 user = get_user(name)
 
 if not user:
@@ -33,46 +42,27 @@ else:
 
 current_user.show_info()
 
+
+
 while True:
 
-    if isinstance(current_user, Customer):
+    try:
 
-        print("\n===== ПОКУПАТЕЛЬ =====")
-        print("1. Просмотр товаров")
-        print("2. Поиск товара")
-        print("3. Создать заказ")
-        print("4. Мои заказы")
-        print("0. Выход")
+        if isinstance(current_user, Customer):
 
-        choice = input("Выберите действие: ")
+            print("\n===== ПОКУПАТЕЛЬ =====")
+            print("1. Просмотр товаров")
+            print("2. Поиск товара")
+            print("3. Создать заказ")
+            print("4. Мои заказы")
+            print("0. Выход")
 
-        if choice == "1":
+            choice = input("Выберите действие: ")
 
-            products = current_user.show_products()
+            if choice == "1":
+                products = current_user.show_products()
 
-            print("\n===== СПИСОК ТОВАРОВ =====")
-
-            for product in products:
-                print(f"""
-ID: {product[0]}
-Название: {product[1]}
-Цена: {product[2]} сом
-Категория: {product[3]}
-----------------------------
-                        """)
-
-        elif choice == "2":
-
-            title = input("Введите название: ")
-
-            products = current_user.search_products(title)
-
-            print("\n===== РЕЗУЛЬТАТ ПОИСКА =====")
-
-            if not products:
-                print("Ничего не найдено.")
-
-            else:
+                print("\n===== СПИСОК ТОВАРОВ =====")
                 for product in products:
                     print(f"""
 ID: {product[0]}
@@ -80,78 +70,124 @@ ID: {product[0]}
 Цена: {product[2]} сом
 Категория: {product[3]}
 ----------------------------
-                            """)
+                    """)
 
-        elif choice == "3":
-            product_id = int(input("ID товара: "))
-            quantity = int(input("Количество: "))
-            current_user.create_order(product_id, quantity)
-            print("Заказ успешно создан.")
+            elif choice == "2":
+                title = input("Введите название: ")
+                products = current_user.search_products(title)
 
-        elif choice == "4":
-            print("\n===== МОИ ЗАКАЗЫ =====")
-            current_user.show_orders()
+                print("\n===== РЕЗУЛЬТАТ ПОИСКА =====")
 
-        elif choice == "0":
-            break
+                if not products:
+                    print("Ничего не найдено.")
+                else:
+                    for product in products:
+                        print(f"""
+ID: {product[0]}
+Название: {product[1]}
+Цена: {product[2]} сом
+Категория: {product[3]}
+----------------------------
+                        """)
 
+            elif choice == "3":
+                try:
+                    product_id = int(input("ID товара: "))
+                    quantity = int(input("Количество: "))
+                    current_user.create_order(product_id, quantity)
+                    print("Заказ успешно создан.")
+                except ValueError:
+                    print("Ошибка: ID и количество должны быть числами.")
 
-    elif isinstance(current_user, Admin):
-        print("\n===== АДМИНИСТРАТОР =====")
-        print("1. Создать товар")
-        print("2. Изменить товар")
-        print("3. Удалить товар")
-        print("4. Просмотр статистики")
-        print("5. Создать категорию")
-        print("6. Просмотр категорий")
-        print("7. Изменить категорию")
-        print("8. Удалить категорию")
-        print("0. Выход")
+            elif choice == "4":
+                print("\n===== МОИ ЗАКАЗЫ =====")
+                current_user.show_orders()
 
-        choice = input("Выберите действие: ")
+            elif choice == "0":
+                break
 
-        if choice == "1":
-            title = input("Название: ")
-            price = float(input("Цена: "))
-            category = int(input("ID категории: "))
+            else:
+                print("Неверный выбор")
 
-            current_user.create_product(title, price, category)
-            print("Товар успешно добавлен.")
+        elif isinstance(current_user, Admin):
 
-        elif choice == "2":
-            product_id = int(input("ID товара: "))
-            title = input("Новое название: ")
-            price = float(input("Новая цена: "))
-            category = int(input("Новая категория: "))
-            current_user.update_product(product_id, title, price, category)
-            print("Товар обновлен.")
+            print("\n===== АДМИНИСТРАТОР =====")
+            print("1. Создать товар")
+            print("2. Изменить товар")
+            print("3. Удалить товар")
+            print("4. Просмотр статистики")
+            print("5. Создать категорию")
+            print("6. Просмотр категорий")
+            print("7. Изменить категорию")
+            print("8. Удалить категорию")
+            print("0. Выход")
 
-        elif choice == "3":
-            product_id = int(input("ID товара: "))
-            current_user.delete_product(product_id)
-            print("Товар удален.")
+            choice = input("Выберите действие: ")
 
-        elif choice == "4":
-            current_user.show_statistics()
+            if choice == "1":
+                try:
+                    title = input("Название: ")
+                    price = float(input("Цена: "))
+                    category = int(input("ID категории: "))
 
-        elif choice == "5":
-            title = input("Название категории: ")
-            current_user.create_category(title)
-            print("Категория добавлена.")
+                    current_user.create_product(title, price, category)
+                    print("Товар успешно добавлен.")
+                except ValueError:
+                    print("Ошибка: цена и ID категории должны быть числами")
 
-        elif choice == "6":
-            current_user.show_categories()
+            elif choice == "2":
+                try:
+                    product_id = int(input("ID товара: "))
+                    title = input("Новое название: ")
+                    price = float(input("Новая цена: "))
+                    category = int(input("Новая категория: "))
 
-        elif choice == "7":
-            category_id = int(input("ID категории: "))
-            title = input("Новое название: ")
-            current_user.update_category(category_id, title)
-            print("Категория изменена.")
+                    current_user.update_product(product_id, title, price, category)
+                    print("Товар обновлен.")
+                except ValueError:
+                    print("Ошибка ввода чисел")
 
-        elif choice == "8":
-            category_id = int(input("ID категории: "))
-            current_user.delete_category(category_id)
-            print("Категория удалена.")
+            elif choice == "3":
+                try:
+                    product_id = int(input("ID товара: "))
+                    current_user.delete_product(product_id)
+                    print("Товар удален.")
+                except ValueError:
+                    print("Ошибка: ID должен быть числом")
 
-        elif choice == "0":
-            break
+            elif choice == "4":
+                current_user.show_statistics()
+
+            elif choice == "5":
+                title = input("Название категории: ")
+                current_user.create_category(title)
+                print("Категория добавлена.")
+
+            elif choice == "6":
+                current_user.show_categories()
+
+            elif choice == "7":
+                try:
+                    category_id = int(input("ID категории: "))
+                    title = input("Новое название: ")
+                    current_user.update_category(category_id, title)
+                    print("Категория изменена.")
+                except ValueError:
+                    print("Ошибка: ID должен быть числом")
+
+            elif choice == "8":
+                try:
+                    category_id = int(input("ID категории: "))
+                    current_user.delete_category(category_id)
+                    print("Категория удалена.")
+                except ValueError:
+                    print("Ошибка: ID должен быть числом")
+
+            elif choice == "0":
+                break
+
+            else:
+                print("Неверный выбор")
+
+    except Exception as e:
+        print(f"Произошла ошибка: {e}")

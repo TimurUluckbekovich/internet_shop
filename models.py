@@ -86,7 +86,6 @@ class Admin(User):
     def delete_category(self, category_id):
         delete_category(category_id)
 
-    # ---------- СТАТИСТИКА ----------
 
     def show_statistics(self):
 
